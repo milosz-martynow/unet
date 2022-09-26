@@ -83,8 +83,6 @@ def input_images_and_masks_paths(
     originals_paths = [str(p) for p in sorted(originals_root.glob("*.jpg"))]
     masks_paths = [str(p) for p in sorted(masks_root.glob("*.png"))]
 
-    tf.data.Dataset.from_tensor_slices((originals_paths, masks_paths))
-
     return originals_paths, masks_paths
 
 
