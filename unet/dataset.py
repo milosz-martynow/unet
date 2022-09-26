@@ -17,7 +17,9 @@ def tensorflow_dataset(
     :rtype: tf.data.Dataset
     """
 
-    return tf.data.Dataset.from_tensor_slices((originals_paths, masks_paths))
+    return tf.data.Dataset.from_tensor_slices(
+        (tf.constant(originals_paths), tf.constant(masks_paths))
+    )
 
 
 def standardize_input_type(
