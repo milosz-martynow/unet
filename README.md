@@ -24,5 +24,21 @@ To run training, fulfill `unet/constants.py` file, with proper paths to download
 python unet/training.py
 ```
 
+## Makefile
+Keep code clean and standardized by using `isort` (sorting imports), `black` (automatic code formatting) and `pylint` (checks code standards). To do everything at once you can use two options of `Makefile`:
+```commandline
+make lint 
+```
+for longer execution including `pylint`, or
+```commandline
+make format
+```
+To get fast format of your code with usage only `isort` and `black`.
+
+`Makefile` gives an option to perform installation procedure via:
+```commandline
+make install
+```
+
 ## Notes
 With given default parameters `unet` is actually able to hit `~60%` of accuracy. Further work on the accuracy is ongoing.
