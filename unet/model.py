@@ -51,7 +51,6 @@ def _convolution_block(
 
 def _encoder(
     convolution: Union[tf.keras.layers.Input, tf.keras.layers.Conv2D],
-    skip_connection: List,
     features_in_layer: List[int],
     kernel_size: List[int],
     pool_size: List[int],
@@ -59,8 +58,6 @@ def _encoder(
     """Function encoding the input image into set of features. Downsampling of image features.
     :param convolution: Input image to be convolved. Might be image of convolution.
     :type convolution: Union[tf.keras.layers.Input, tf.keras.layers.Conv2D]
-    :param skip_connection: last convolution of _convolution_block of each filter iteration.
-    :type skip_connection: List
     :param features_in_layer: Number of dimensions at the output of convolution.
     :type features_in_layer: int
     :param kernel_size: Size of convolution window.
@@ -71,6 +68,7 @@ def _encoder(
     :rtype: Tuple[tf.keras.layers.Conv2D, List[tf.keras.layers.Conv2D]]
     """
 
+    skip_connection = []
     for filters in features_in_layer:
         convolution = _convolution_block(
             convolution=convolution, features_in_layer=filters, kernel_size=kernel_size
@@ -136,11 +134,9 @@ def build_model(
     :rtype: tf.keras.models
     """
     convolution_base = tf.keras.layers.Input(shape=(*reshape, 3))
-    skip_connection = []
 
     convolution, skip_connection = _encoder(
         convolution=convolution_base,
-        skip_connection=skip_connection,
         features_in_layer=features_in_layer,
         kernel_size=kernel_size,
         pool_size=pool_size,

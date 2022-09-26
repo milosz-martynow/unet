@@ -63,6 +63,7 @@ def standardize_input_type(
 
         mask = tf.io.read_file(mask_path)
         mask = _decode_image(input_image=mask, image_type=masks_type)
+        # mask = tf.image.convert_image_dtype(mask, tf.float32)
         mask = tf.math.reduce_max(mask, axis=-1, keepdims=True)
 
         return mask
@@ -89,7 +90,7 @@ def preprocess(
 
     def _preprocess(input_image: tf.Tensor, reshape: List[int]):
         """Encapsulated preprocessing function to keep the same procedures for original and mask."""
-        return tf.image.resize(input_image, reshape)
+        return tf.image.resize(input_image, reshape, method="nearest")
 
     original = _preprocess(original, reshape)
     mask = _preprocess(mask, reshape)
@@ -106,10 +107,10 @@ def compile_dataset(
     batch_size: int,
 ) -> tf.data.Dataset:
     """Function that compiles all data set processing steps.
-    :param original_path: Original image path presented as Tensor object. Coupled with mask_path.
-    :type original_path: List[str]
-    :param mask_path: Mask image path presented as Tensor object. Coupled with original_path.
-    :type mask_path: List[str]
+    :param originals_paths: Original image path presented as Tensor object. Coupled with mask_path.
+    :type originals_paths: List[str]
+    :param masks_paths: Mask image path presented as Tensor object. Coupled with original_path.
+    :type masks_paths: List[str]
     :param originals_type: Type of original images to search - just extension e.g. .jpg.
     :type originals_type: str
     :param masks_type: Type of masks images to search - just extension e.g. .png.

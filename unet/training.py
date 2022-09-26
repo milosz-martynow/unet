@@ -88,7 +88,7 @@ if __name__ == "__main__":
     )
 
     model.compile(
-        loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
+        loss=tf.keras.losses.BinaryCrossentropy(),
         optimizer=tf.keras.optimizers.Adam(learning_rate=lr_schedule, epsilon=EPSILON),
         metrics=["accuracy"],
     )
