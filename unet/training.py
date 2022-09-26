@@ -82,14 +82,11 @@ if __name__ == "__main__":
 
     model.summary()
 
-    #  initial_learning_rate * decay_rate ^ (step / decay_steps)
-    lr_schedule = tf.keras.optimizers.schedules.ExponentialDecay(
-        initial_learning_rate=LEARNING_RATE, decay_steps=10000, decay_rate=0.9
-    )
-
     model.compile(
         loss=tf.keras.losses.BinaryCrossentropy(),
-        optimizer=tf.keras.optimizers.Adam(learning_rate=lr_schedule, epsilon=EPSILON),
+        optimizer=tf.keras.optimizers.Adam(
+            learning_rate=LEARNING_RATE, epsilon=EPSILON
+        ),
         metrics=["accuracy"],
     )
 
