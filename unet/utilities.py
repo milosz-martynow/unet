@@ -68,7 +68,7 @@ def dataset_paths(originals_root: Path, masks_root: Path) -> Tuple[Path, Path]:
 
 
 def input_images_and_masks_paths(
-    originals_root: Path, masks_root: Path, originals_type: str, masks_type: str
+    originals_root: Path, masks_root: Path
 ) -> Tuple[List[str], List[str]]:
     """Function that scans given folders in search of original
     images full paths and masks full paths.
@@ -76,18 +76,14 @@ def input_images_and_masks_paths(
     :type originals_root: Path
     :param masks_root: Root path of masks images.
     :type masks_root: Path
-    :param originals_type: Type of original images to search - just extension e.g. .jpg.
-    :type originals_type: str
-    :param masks_type: Type of masks images to search - just extension e.g. .png.
-    :type masks_type: str
     :returns: Sorted lists of full paths of original images and masks with specific extensions.
     :rtype: Tuple[List[str], List[str]]
     """
 
-    originals_paths = [
-        str(p) for p in sorted(originals_root.glob(f"*{originals_type}"))
-    ]
-    masks_paths = [str(p) for p in sorted(masks_root.glob(f"*{masks_type}"))]
+    originals_paths = [str(p) for p in sorted(originals_root.glob("*.jpg"))]
+    masks_paths = [str(p) for p in sorted(masks_root.glob("*.png"))]
+
+    tf.data.Dataset.from_tensor_slices((originals_paths, masks_paths))
 
     return originals_paths, masks_paths
 

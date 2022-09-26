@@ -4,12 +4,11 @@
 ORIGINALS = "/home/mimi/Projects/own_projects/aerial_image_segmentation/data/kaggle/dataset/semantic_drone_dataset/original_images"
 MASKS = "/home/mimi/Projects/own_projects/aerial_image_segmentation/data/kaggle/dataset/semantic_drone_dataset/label_images_semantic"
 # MASKS = "/home/mimi/Projects/own_projects/aerial_image_segmentation/data/kaggle/RGB_color_image_masks"
-ORIGINAL_TYPE = ".jpg"
-MASK_TYPE = ".png"
+
 SEGMENTATION_CLASSES = 24
 
 #  Project structure information
-NAME = "test"
+NAME = "test2"
 DATA_ROOT = "./data"
 MODELS_FOLDER = "models"
 TRAININGS_DATA_FOLDER = "trainings_data"

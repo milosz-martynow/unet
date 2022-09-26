@@ -44,7 +44,7 @@ def _convolution_block(
         kernel_initializer=tf.keras.initializers.HeNormal,
     )(convolution)
 
-    convolution = tf.keras.layers.Dropout(0.5)(convolution)
+    convolution = tf.keras.layers.Dropout(0.1)(convolution)
 
     return convolution
 
@@ -101,9 +101,7 @@ def _decoder(
     :rtype: tf.keras.layers.Conv2D
     """
     for skip, filters in zip(skip_connection, features_in_layer):
-        convolution = tf.keras.layers.Conv2DTranspose(
-            filters, kernel_size=kernel_size, strides=pool_size, padding="same"
-        )(convolution)
+        convolution = tf.keras.layers.UpSampling2D(size=pool_size)(convolution)
         convolution = tf.keras.layers.Concatenate(axis=3)([convolution, skip])
         convolution = _convolution_block(
             convolution=convolution, features_in_layer=filters, kernel_size=kernel_size

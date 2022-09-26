@@ -10,12 +10,10 @@ from unet.constants import (
     EPSILON,
     FILTERS_NUMBER,
     LEARNING_RATE,
-    MASK_TYPE,
     MASKS,
     MAX_POOL_SIZE,
     MODELS_FOLDER,
     NAME,
-    ORIGINAL_TYPE,
     ORIGINALS,
     PLOTS_FOLDER,
     RESHAPE,
@@ -46,17 +44,12 @@ if __name__ == "__main__":
     originals, masks = dataset_paths(originals_root=ORIGINALS, masks_root=MASKS)
 
     originals_paths, masks_paths = input_images_and_masks_paths(
-        originals_root=originals,
-        masks_root=masks,
-        originals_type=ORIGINAL_TYPE,
-        masks_type=MASK_TYPE,
+        originals_root=originals, masks_root=masks
     )
 
     dataset = compile_dataset(
         originals_paths=originals_paths,
         masks_paths=masks_paths,
-        originals_type=ORIGINAL_TYPE,
-        masks_type=MASK_TYPE,
         reshape=RESHAPE,
         batch_size=BATCH,
     )
@@ -83,9 +76,9 @@ if __name__ == "__main__":
     model.summary()
 
     model.compile(
-        loss=tf.keras.losses.BinaryCrossentropy(),
+        loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
         optimizer=tf.keras.optimizers.Adam(
-            learning_rate=LEARNING_RATE, epsilon=EPSILON
+            learning_rate=LEARNING_RATE, epsilon=EPSILON, amsgrad=True
         ),
         metrics=["accuracy"],
     )

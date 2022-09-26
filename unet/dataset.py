@@ -21,55 +21,24 @@ def tensorflow_dataset(
 
 
 def standardize_input_type(
-    original_path: tf.Tensor, mask_path: tf.Tensor, originals_type: str, masks_type: str
+    original_path: tf.Tensor, mask_path: tf.Tensor
 ) -> Tuple[tf.Tensor, tf.Tensor]:
     """Function that standardize input original and mask image into TensoFlow object.
     :param original_path: Original image path presented as Tensor object. Coupled with mask_path.
     :type original_path: tf.Tensor
     :param mask_path: Mask image path presented as Tensor object. Coupled with original_path.
     :type mask_path: tf.Tensor
-    :param originals_type: Type of original images to search - just extension e.g. .jpg.
-    :type originals_type: str
-    :param masks_type: Type of masks images to search - just extension e.g. .png.
-    :type masks_type: str
     :returns: Original and mask tensor objects of standardized form.
     :rtype: tf.data.Dataset
     """
 
-    def _decode_image(input_image: tf.Tensor, image_type: str) -> tf.Tensor:
-        """Function that handle multiple type decoding routines."""
+    original = tf.io.read_file(original_path)
+    original = tf.image.decode_jpeg(original, channels=3)
+    original = tf.image.convert_image_dtype(original, tf.float32)
 
-        if image_type == ".png":
-            return tf.image.decode_png(input_image, channels=3)
-
-        elif image_type == ".jpg":
-            return tf.image.decode_jpeg(input_image, channels=3)
-
-    def _original_images_standardization(
-        original_path: tf.Tensor, originals_type: str
-    ) -> tf.Tensor:
-        """Function standardizing original image."""
-
-        original = tf.io.read_file(original_path)
-        original = _decode_image(input_image=original, image_type=originals_type)
-        original = tf.image.convert_image_dtype(original, tf.float32)
-
-        return original
-
-    def _masks_images_standardization(
-        mask_path: tf.Tensor, masks_type: str
-    ) -> tf.Tensor:
-        """Function standardizing mask image."""
-
-        mask = tf.io.read_file(mask_path)
-        mask = _decode_image(input_image=mask, image_type=masks_type)
-        # mask = tf.image.convert_image_dtype(mask, tf.float32)
-        mask = tf.math.reduce_max(mask, axis=-1, keepdims=True)
-
-        return mask
-
-    original = _original_images_standardization(original_path, originals_type)
-    mask = _masks_images_standardization(mask_path, masks_type)
+    mask = tf.io.read_file(mask_path)
+    mask = tf.image.decode_png(mask, channels=1, dtype=tf.dtypes.uint8)
+    mask = tf.math.reduce_max(mask, axis=-1, keepdims=True)
 
     return original, mask
 
@@ -101,8 +70,6 @@ def preprocess(
 def compile_dataset(
     originals_paths: List[str],
     masks_paths: List[str],
-    originals_type: str,
-    masks_type: str,
     reshape: List[int],
     batch_size: int,
 ) -> tf.data.Dataset:
@@ -111,10 +78,6 @@ def compile_dataset(
     :type originals_paths: List[str]
     :param masks_paths: Mask image path presented as Tensor object. Coupled with original_path.
     :type masks_paths: List[str]
-    :param originals_type: Type of original images to search - just extension e.g. .jpg.
-    :type originals_type: str
-    :param masks_type: Type of masks images to search - just extension e.g. .png.
-    :type masks_type: str
     :param reshape: Width and height of new image.
     :type reshape: List[int]
     :param batch_size: Number of images in single batch.
@@ -127,11 +90,7 @@ def compile_dataset(
         originals_paths=originals_paths, masks_paths=masks_paths
     )
 
-    dataset = dataset.map(
-        lambda original, mask: standardize_input_type(
-            original, mask, originals_type=originals_type, masks_type=masks_type
-        )
-    )
+    dataset = dataset.map(lambda original, mask: standardize_input_type(original, mask))
 
     dataset = dataset.map(
         lambda original, mask: preprocess(original, mask, reshape=reshape)
