@@ -1,13 +1,10 @@
-.PHONY: test lint format install
-
-test:
-	pytest -v tests/
+.PHONY: lint format
 
 lint:
-	isort --check --profile black .
-	black --check .
-	pylint .
+	isort --check --profile black ./unet
+	black --check ./unet
+	pylint ./unet
 
 format:
-	isort --profile black .
-	black .
+	isort --profile black ./unet
+	black ./unet
