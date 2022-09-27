@@ -41,4 +41,7 @@ make install
 ```
 
 ## Notes
-With given default parameters `unet` is actually able to hit `~70%` of accuracy at `100` epochs. Further work on the accuracy is ongoing.
+ - With given default parameters, `unet` is actually able to hit `~70%` of accuracy at `100` epochs. Further work on the accuracy is ongoing.
+ - Base U-Net mode developed on publication [U-Net: Convolutional Networks for Biomedical Image Segmentation](https://link.springer.com/chapter/10.1007/978-3-319-24574-4_28)
+ - Data is tested on:
+   - Kaggle competition on [Aerial Semantic Segmentation Drone Dataset](https://www.kaggle.com/datasets/bulentsiyah/semantic-drone-dataset)
