@@ -8,7 +8,7 @@ MASKS = "/home/mimi/Projects/own_projects/aerial_image_segmentation/data/kaggle/
 SEGMENTATION_CLASSES = 24
 
 #  Project structure information
-NAME = "test2"
+NAME = "test3"
 DATA_ROOT = "./data"
 MODELS_FOLDER = "models"
 TRAININGS_DATA_FOLDER = "trainings_data"
@@ -16,7 +16,7 @@ PLOTS_FOLDER = "plots"
 
 #  U-Net parameters
 RESHAPE = [192, 256]
-BATCH = 8
+BATCH = 4
 EPOCHS = 100
 TEST_TRAIN_VALIDATION = [0.8, 0.1, 0.1]
 CONVOLUTION_KERNEL_SIZE = [3, 3]

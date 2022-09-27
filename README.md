@@ -41,4 +41,4 @@ make install
 ```
 
 ## Notes
-With given default parameters `unet` is actually able to hit `~60%` of accuracy. Further work on the accuracy is ongoing.
+With given default parameters `unet` is actually able to hit `~70%` of accuracy at `100` epochs. Further work on the accuracy is ongoing.

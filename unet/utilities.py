@@ -86,26 +86,19 @@ def input_images_and_masks_paths(
     return originals_paths, masks_paths
 
 
-def number_of_steps(
-    train_dataset: tf.data.Dataset, validation_dataset: tf.data.Dataset, batch_size: int
-) -> Tuple[int, int]:
+def number_of_steps(dataset: tf.data.Dataset, batch_size: int) -> Tuple[int, int]:
     """Calculate number of steps to take per each epoch.
     :param train_dataset: Train images dataset.
     :type train_dataset: tf.data.Dataset
-    :param validation_dataset: Validation images dataset
-    :type validation_dataset: tf.data.Dataset
     :param batch_size: Number of images in single batch.
     :type batch_size: int
     :returns: Number of steps to take in each epoch by training and validation process.
     :rtype: Tuple[int, int]
     """
 
-    train_steps = len(train_dataset) // batch_size
-    validation_steps = len(validation_dataset) // batch_size
+    steps = len(dataset) // batch_size
 
-    if len(train_dataset) % batch_size != 0:
-        train_steps += 1
-    if len(validation_dataset) % batch_size != 0:
-        validation_steps += 1
+    if len(dataset) % batch_size != 0:
+        steps += 1
 
-    return train_steps, validation_steps
+    return steps

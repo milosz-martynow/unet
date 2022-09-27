@@ -83,9 +83,12 @@ if __name__ == "__main__":
         prefix=NAME, model_path=model_path, training_data_path=training_data_path
     )
 
-    train_steps, validation_steps = number_of_steps(
-        train_dataset=train_dataset,
-        validation_dataset=validation_dataset,
+    train_steps = number_of_steps(
+        dataset=train_dataset,
+        batch_size=BATCH,
+    )
+    validation_steps = number_of_steps(
+        dataset=validation_dataset,
         batch_size=BATCH,
     )
 
