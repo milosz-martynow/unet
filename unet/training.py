@@ -23,7 +23,7 @@ from unet.constants import (
 )
 from unet.dataset import compile_dataset, split_dataset
 from unet.model import build_model
-from unet.plots import plot_metrics, plot_original_and_mask, plot_predicted_mask
+from unet.plots import plot_metrics, plot_predicted_mask
 from unet.utilities import (
     dataset_paths,
     input_images_and_masks_paths,
@@ -74,7 +74,7 @@ if __name__ == "__main__":
     model.compile(
         loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
         optimizer=tf.keras.optimizers.Adam(
-            learning_rate=LEARNING_RATE, epsilon=EPSILON, amsgrad=True
+            learning_rate=LEARNING_RATE, epsilon=EPSILON
         ),
         metrics=["accuracy"],
     )
