@@ -18,7 +18,7 @@ def tensorflow_dataset(
     """
 
     return tf.data.Dataset.from_tensor_slices(
-        (tf.constant(originals_paths), tf.constant(masks_paths))
+        (tf.constant(originals_paths, name="Originals"), tf.constant(masks_paths, name="Masks"))
     )
 
 

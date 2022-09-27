@@ -54,10 +54,6 @@ if __name__ == "__main__":
         batch_size=BATCH,
     )
 
-    plot_original_and_mask(
-        dataset=dataset, dataset_number=1, prefix=NAME, save_path=plots_path
-    )
-
     train_dataset, test_dataset, validation_dataset = split_dataset(
         dataset=dataset,
         train_size=TEST_TRAIN_VALIDATION[0],
