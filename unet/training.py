@@ -56,9 +56,7 @@ if __name__ == "__main__":
 
     train_dataset, test_dataset, validation_dataset = split_dataset(
         dataset=dataset,
-        train_size=TEST_TRAIN_VALIDATION[0],
-        test_size=TEST_TRAIN_VALIDATION[1],
-        validation_size=TEST_TRAIN_VALIDATION[2],
+        split_sizes=TEST_TRAIN_VALIDATION,
     )
 
     model = build_model(
@@ -84,11 +82,11 @@ if __name__ == "__main__":
     )
 
     train_steps = number_of_steps(
-        dataset=train_dataset,
+        dataset=len(train_dataset),
         batch_size=BATCH,
     )
     validation_steps = number_of_steps(
-        dataset=validation_dataset,
+        dataset=len(validation_dataset),
         batch_size=BATCH,
     )
 

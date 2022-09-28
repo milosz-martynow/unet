@@ -106,21 +106,15 @@ def compile_dataset(
 
 def split_dataset(
     dataset: tf.data.Dataset,
-    train_size: float,
-    validation_size: float,
-    test_size: float,
+    split_sizes: List[float],
 ) -> Tuple[tf.data.Dataset, tf.data.Dataset, tf.data.Dataset]:
     """Function that splits dataset containing originals with masks images,
     into train, test, validation datasets. At the begging input dataset is shuffled.
     Test, train and validation floats, have to sum up to 1.0.
     :param dataset: Tensorflow dataset object, connecting original and masks images with them self.
     :type dataset: tf.data.Dataset
-    :param train_size: Train dataset size, from 0.0 to 1.0.
-    :type train_size: float
-    :param validation_size: Validation dataset size, from 0.0 to 1.0.
-    :type validation_size: float
-    :param test_size: Test dataset size, from 0.0 to 1.0.
-    :type test_size: float
+    :param split_sizes: Train, test and validation dataset sizes, from 0.0 to 1.0.
+    :type split_sizes: float
     :returns: Train, test and validation dataset.
     :rtype: Tuple[tf.data.Dataset, tf.data.Dataset, tf.data.Dataset]
     """
@@ -129,9 +123,9 @@ def split_dataset(
 
     dataset = dataset.shuffle(buffer_size=int(dataset_size / 10))
 
-    n_train = int(dataset_size * train_size)
-    n_validation = int(dataset_size * validation_size)
-    n_test = int(dataset_size * test_size)
+    n_train = int(dataset_size * split_sizes[0])
+    n_validation = int(dataset_size * split_sizes[1])
+    n_test = int(dataset_size * split_sizes[2])
 
     train_dataset = dataset.take(n_train)
     validation_dataset = dataset.skip(n_train).take(n_validation)

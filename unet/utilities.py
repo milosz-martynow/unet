@@ -61,7 +61,7 @@ def dataset_paths(originals_root: Path, masks_root: Path) -> Tuple[Path, Path]:
     :type originals_root: Path
     :param masks_root: Root path of masks images.
     :type masks_root: Path
-    :returns: PAth object with root paths to originals and masks images.
+    :returns: Path object with root paths to originals and masks images.
     :rtype: Tuple[Path, Path]
     """
     return Path(originals_root), Path(masks_root)
@@ -86,7 +86,7 @@ def input_images_and_masks_paths(
     return originals_paths, masks_paths
 
 
-def number_of_steps(dataset: tf.data.Dataset, batch_size: int) -> Tuple[int, int]:
+def number_of_steps(dataset_size: int, batch_size: int) -> Tuple[int, int]:
     """Calculate number of steps to take per each epoch.
     :param train_dataset: Train images dataset.
     :type train_dataset: tf.data.Dataset
@@ -96,9 +96,9 @@ def number_of_steps(dataset: tf.data.Dataset, batch_size: int) -> Tuple[int, int
     :rtype: Tuple[int, int]
     """
 
-    steps = len(dataset) // batch_size
+    steps = len(dataset_size) // batch_size
 
-    if len(dataset) % batch_size != 0:
+    if len(dataset_size) % batch_size != 0:
         steps += 1
 
     return steps
