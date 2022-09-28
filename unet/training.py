@@ -82,11 +82,11 @@ if __name__ == "__main__":
     )
 
     train_steps = number_of_steps(
-        dataset=len(train_dataset),
+        dataset_size=len(train_dataset),
         batch_size=BATCH,
     )
     validation_steps = number_of_steps(
-        dataset=len(validation_dataset),
+        dataset_size=len(validation_dataset),
         batch_size=BATCH,
     )
 

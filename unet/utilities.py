@@ -96,9 +96,9 @@ def number_of_steps(dataset_size: int, batch_size: int) -> Tuple[int, int]:
     :rtype: Tuple[int, int]
     """
 
-    steps = len(dataset_size) // batch_size
+    steps = dataset_size // batch_size
 
-    if len(dataset_size) % batch_size != 0:
+    if dataset_size % batch_size != 0:
         steps += 1
 
     return steps
