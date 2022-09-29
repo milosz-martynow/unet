@@ -27,12 +27,11 @@ def prepare_project_structure(
         folder.mkdir(parents=True, exist_ok=True)
         return folder
 
-    data_root = _prepare_folder(Path(data_root))
     models_path = _prepare_folder(Path(data_root, models_path))
     training_data_path = _prepare_folder(Path(data_root, training_data_path))
     plots_path = _prepare_folder(Path(data_root, plots_path))
 
-    return data_root, models_path, training_data_path, plots_path
+    return models_path, training_data_path, plots_path
 
 
 def prepare_output_files_names(
@@ -95,10 +94,12 @@ def number_of_steps(dataset_size: int, batch_size: int) -> Tuple[int, int]:
     :returns: Number of steps to take in each epoch by training and validation process.
     :rtype: Tuple[int, int]
     """
+    try:
+        steps = dataset_size // batch_size
 
-    steps = dataset_size // batch_size
-
-    if dataset_size % batch_size != 0:
-        steps += 1
+        if dataset_size % batch_size != 0:
+            steps += 1
+    except ZeroDivisionError:
+        steps = None
 
     return steps

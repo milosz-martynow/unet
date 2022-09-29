@@ -40,6 +40,11 @@ To get fast format of your code with usage only `isort` and `black`.
 make install
 ```
 
+Toy can also run automatically tests with:
+```commandline
+make test
+```
+
 ## Notes
  - With given default parameters, `unet` is actually able to hit `~70%` of accuracy at `100` epochs. Further work on the accuracy is ongoing.
  - Base U-Net mode developed on publication [U-Net: Convolutional Networks for Biomedical Image Segmentation](https://link.springer.com/chapter/10.1007/978-3-319-24574-4_28)

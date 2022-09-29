@@ -34,7 +34,7 @@ from unet.utilities import (
 
 if __name__ == "__main__":
 
-    data_root, model_path, training_data_path, plots_path = prepare_project_structure(
+    model_path, training_data_path, plots_path = prepare_project_structure(
         data_root=DATA_ROOT,
         models_path=MODELS_FOLDER,
         training_data_path=TRAININGS_DATA_FOLDER,
