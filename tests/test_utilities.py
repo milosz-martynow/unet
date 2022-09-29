@@ -182,5 +182,5 @@ def test_input_images_and_masks_paths(
     ],
 )
 def test_number_of_steps(dataset_size: int, batch_size: int, result: int):
-    """Test wheaten length of batch is correct."""
+    """Test whether length of batch is correct."""
     assert result == number_of_steps(dataset_size, batch_size)
