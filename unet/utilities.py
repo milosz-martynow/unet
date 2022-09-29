@@ -3,12 +3,10 @@
 from pathlib import Path
 from typing import List, Tuple
 
-import tensorflow as tf
-
 
 def prepare_project_structure(
     data_root: str, models_path: str, training_data_path: str, plots_path: str
-) -> Tuple[Path, Path, Path]:
+) -> Tuple[Path, Path, Path, Path]:
     """Function that prepare project structure. Creates folder if its needed,
     and returns paths to them in Path objects
     :param data_root: Root folder of overall data storage.
@@ -23,14 +21,16 @@ def prepare_project_structure(
     :rtype: List[Path, Path, Path, Path]
     """
 
-    data_root = Path(data_root)
-    data_root.mkdir(parents=True, exist_ok=True)
-    models_path = Path(data_root, models_path)
-    models_path.mkdir(parents=True, exist_ok=True)
-    training_data_path = Path(data_root, training_data_path)
-    training_data_path.mkdir(parents=True, exist_ok=True)
-    plots_path = Path(data_root, plots_path)
-    plots_path.mkdir(parents=True, exist_ok=True)
+    def _prepare_folder(path: Path) -> Path:
+        """Encapsulated sub-function for folder creation base on a given path."""
+        folder = Path(path)
+        folder.mkdir(parents=True, exist_ok=True)
+        return folder
+
+    data_root = _prepare_folder(Path(data_root))
+    models_path = _prepare_folder(Path(data_root, models_path))
+    training_data_path = _prepare_folder(Path(data_root, training_data_path))
+    plots_path = _prepare_folder(Path(data_root, plots_path))
 
     return data_root, models_path, training_data_path, plots_path
 
@@ -41,8 +41,8 @@ def prepare_output_files_names(
     """Function preparing data files Path, with root paths.
     :param prefix: Descriptive prefix standing in the file name.
     :type prefix: str
-    :param models_path: Sub-folder name for models archivision.
-    :type models_path: Path
+    :param model_path: Sub-folder name for models archivision.
+    :type model_path: Path
     :param training_data_path: Sub-folder path for training data archivision.
     :type training_data_path: Path
     :returns: Paths to root of data storage, models and training epochs information.

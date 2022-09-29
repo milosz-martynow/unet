@@ -95,7 +95,7 @@ def compile_dataset(
         originals_paths=originals_paths, masks_paths=masks_paths
     )
 
-    dataset = dataset.map(lambda original, mask: standardize_input_type(original, mask))
+    dataset = dataset.map(standardize_input_type)
 
     dataset = dataset.map(
         lambda original, mask: preprocess(original, mask, reshape=reshape)
