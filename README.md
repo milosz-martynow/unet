@@ -18,6 +18,7 @@ pyenv install 3.10.4
 pyenv virtualenv 3.10.4 unet
 pyenv activate unet
 ```
+For PyCharm users - after this go to `Settings | Project | Python Interpreter | Add Interpreter | Add Local Interpreter | Virtual Environment | New | and hoose location of interpreter`. Now IDE will see all pip installed packages - including in Python Console.
 ## Training
 To run training, fulfill `unet/constants.py` file, with proper paths to downloaded [dataset](http://dronedataset.icg.tugraz.at). After this, and after dependencies installation, you can run training e.g. by typing in terminal:
 ```commandline
