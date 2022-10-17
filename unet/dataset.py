@@ -43,7 +43,7 @@ def standardize_input_type(
 
     mask = tf.io.read_file(mask_path)
     mask = tf.image.decode_png(mask, channels=1, dtype=tf.dtypes.uint8)
-    mask = tf.math.reduce_max(mask, axis=-1, keepdims=True)
+    mask = tf.image.convert_image_dtype(mask, tf.float32)
 
     return original, mask
 

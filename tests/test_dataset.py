@@ -1,11 +1,11 @@
 """Test datasets compatibility."""
 
 import tensorflow as tf
+
 from unet.dataset import tensorflow_dataset
 
 
 class TestDataset(tf.test.TestCase):
-
     def test_tensorflow_dataset(self):
         """Test weather dataset is created correctly."""
         originals = ["original_0.jpg", "original_1.jpg"]
@@ -21,7 +21,7 @@ class TestDataset(tf.test.TestCase):
         self.assertAllEqual(
             a=list(test_function.as_numpy_iterator()),
             b=list(test_dataset.as_numpy_iterator()),
-            msg="Content of dataset is not the same."
+            msg="Content of dataset is not the same.",
         )
 
 

@@ -1,5 +1,6 @@
 """Run training."""
 
+import numpy as np
 import tensorflow as tf
 
 from unet.constants import (
@@ -69,10 +70,17 @@ if __name__ == "__main__":
 
     model.summary()
 
+    learning_rate = tf.keras.optimizers.schedules.CosineDecay(
+        initial_learning_rate=LEARNING_RATE,
+        decay_steps=EPOCHS,
+        alpha=LEARNING_RATE * 1e-02,
+    )
+
     model.compile(
         loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
         optimizer=tf.keras.optimizers.Adam(
-            learning_rate=LEARNING_RATE, epsilon=EPSILON
+            learning_rate=learning_rate,
+            epsilon=EPSILON,
         ),
         metrics=["accuracy"],
     )

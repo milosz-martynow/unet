@@ -8,6 +8,8 @@ lint:
 format:
 	isort --profile black ./unet
 	black ./unet
+	black ./scripts
+	black ./tests
 
 install:
 	pip install -e .

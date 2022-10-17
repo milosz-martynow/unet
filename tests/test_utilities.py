@@ -1,15 +1,17 @@
 """Test utilities scripts."""
 
-import pytest
+import shutil
 from pathlib import Path
 from typing import List
-import shutil
+
+import pytest
+
 from unet.utilities import (
-    prepare_project_structure,
-    prepare_output_files_names,
     dataset_paths,
     input_images_and_masks_paths,
     number_of_steps,
+    prepare_output_files_names,
+    prepare_project_structure,
 )
 
 
