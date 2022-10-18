@@ -25,6 +25,7 @@ def tensorflow_dataset(
     )
 
 
+@tf.function
 def standardize_input_type(
     original_path: tf.Tensor, mask_path: tf.Tensor
 ) -> Tuple[tf.Tensor, tf.Tensor]:
@@ -38,7 +39,7 @@ def standardize_input_type(
     """
 
     original = tf.io.read_file(original_path)
-    original = tf.image.decode_jpeg(original, channels=3)
+    original = tf.image.decode_jpeg(original, channels=1)
     original = tf.image.convert_image_dtype(original, tf.float32)
 
     mask = tf.io.read_file(mask_path)
@@ -124,11 +125,11 @@ def split_dataset(
     dataset = dataset.shuffle(buffer_size=int(dataset_size / 10))
 
     n_train = int(dataset_size * split_sizes[0])
-    n_validation = int(dataset_size * split_sizes[1])
     n_test = int(dataset_size * split_sizes[2])
+    n_validation = int(dataset_size * split_sizes[1])
 
     train_dataset = dataset.take(n_train)
-    validation_dataset = dataset.skip(n_train).take(n_validation)
     test_dataset = dataset.skip(n_train + n_validation).take(n_test)
+    validation_dataset = dataset.skip(n_train).take(n_validation)
 
     return train_dataset, test_dataset, validation_dataset

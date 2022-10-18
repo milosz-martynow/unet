@@ -1,6 +1,5 @@
 """Run training."""
 
-import numpy as np
 import tensorflow as tf
 
 from unet.constants import (
@@ -8,7 +7,6 @@ from unet.constants import (
     CONVOLUTION_KERNEL_SIZE,
     DATA_ROOT,
     EPOCHS,
-    EPSILON,
     FILTERS_NUMBER,
     LEARNING_RATE,
     MASKS,
@@ -19,7 +17,7 @@ from unet.constants import (
     PLOTS_FOLDER,
     RESHAPE,
     SEGMENTATION_CLASSES,
-    TEST_TRAIN_VALIDATION,
+    TRAIN_TEST_VALIDATION,
     TRAININGS_DATA_FOLDER,
 )
 from unet.dataset import compile_dataset, split_dataset
@@ -57,7 +55,7 @@ if __name__ == "__main__":
 
     train_dataset, test_dataset, validation_dataset = split_dataset(
         dataset=dataset,
-        split_sizes=TEST_TRAIN_VALIDATION,
+        split_sizes=TRAIN_TEST_VALIDATION,
     )
 
     model = build_model(
@@ -70,18 +68,24 @@ if __name__ == "__main__":
 
     model.summary()
 
+    #  learning_rade should have some schedule across the training epochs.
+    #  This will prevent umping out from founded loss minimum,
+    #  by constant big step at the end of training.
+    #
+    #  learning_rate = LEARNING_RATE
+    #
     learning_rate = tf.keras.optimizers.schedules.CosineDecay(
         initial_learning_rate=LEARNING_RATE,
         decay_steps=EPOCHS,
         alpha=LEARNING_RATE * 1e-02,
     )
 
+    #  Due to that we have only one class paved-area, e.g. streets etc,
+    #  We can use BinaryCrossEntropy as a loss function,
+    #  to decide weather pixel of original lays in the masked area or no.
     model.compile(
-        loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
-        optimizer=tf.keras.optimizers.Adam(
-            learning_rate=learning_rate,
-            epsilon=EPSILON,
-        ),
+        loss=tf.keras.losses.BinaryCrossentropy(),
+        optimizer=tf.keras.optimizers.Adam(learning_rate=learning_rate),
         metrics=["accuracy"],
     )
 
@@ -108,6 +112,7 @@ if __name__ == "__main__":
         ],
         steps_per_epoch=train_steps,
         validation_steps=validation_steps,
+        # shuffle=True
     )
 
     plot_metrics(model_history=model_history, prefix=NAME, save_path=plots_path)

@@ -19,6 +19,9 @@ def _convolution_block(
     :returns: Convolution object.
     :rtype: tf.keras.Input
     """
+    #  If originals and masks are converted to normalized grayscale images (pixels in range 0-1),
+    #  single convolution is sufficient to extract main features.
+    #  In case of 3 channels images, it is recommended to have 3 convolution layers.
 
     convolution = tf.keras.layers.Conv2D(
         filters=features_in_layer,
@@ -28,13 +31,8 @@ def _convolution_block(
         kernel_initializer=tf.keras.initializers.HeNormal,
     )(convolution)
 
-    convolution = tf.keras.layers.Conv2D(
-        filters=features_in_layer,
-        kernel_size=kernel_size,
-        padding="same",
-        activation="relu",
-        kernel_initializer=tf.keras.initializers.HeNormal,
-    )(convolution)
+    #  Batch normalization prevents loss being huge
+    convolution = tf.keras.layers.BatchNormalization()(convolution)
 
     return convolution
 
@@ -128,7 +126,7 @@ def build_model(
     :returns: U-net model architecture
     :rtype: tf.keras.models
     """
-    convolution_base = tf.keras.layers.Input(shape=(*reshape, 3))
+    convolution_base = tf.keras.layers.Input(shape=(*reshape, 1))
 
     convolution, skip_connections = _encoder(
         convolution=convolution_base,
@@ -150,8 +148,10 @@ def build_model(
         pool_size=pool_size,
     )
 
+    #  softmax at the end, normalize the output
+    #  Thus, there is no need to have from_logits=True in loss function
     convolution = tf.keras.layers.Conv2D(
-        segmentation_classes, kernel_size=(1, 1), padding="same", activation="relu"
+        segmentation_classes, kernel_size=(1, 1), padding="same", activation="softmax"
     )(convolution)
 
     return tf.keras.models.Model(inputs=convolution_base, outputs=convolution)
