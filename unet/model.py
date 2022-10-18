@@ -148,10 +148,13 @@ def build_model(
         pool_size=pool_size,
     )
 
-    #  softmax at the end, normalize the output
-    #  Thus, there is no need to have from_logits=True in loss function
+    #  Apply non-linearity via sigmoid at the end, normalize the output
+    #  Thus, there is no need to have from_logits=True in loss function.
+    #  Nevertheless, above might lead to situation where training params
+    #  stuck at some level, due to small non-linearity.
+    #  Applying relu, with from_logits=True in loss function might fix that.
     convolution = tf.keras.layers.Conv2D(
-        segmentation_classes, kernel_size=(1, 1), padding="same", activation="softmax"
+        segmentation_classes, kernel_size=(1, 1), padding="same", activation="relu"
     )(convolution)
 
     return tf.keras.models.Model(inputs=convolution_base, outputs=convolution)

@@ -84,8 +84,8 @@ if __name__ == "__main__":
     #  We can use BinaryCrossEntropy as a loss function,
     #  to decide weather pixel of original lays in the masked area or no.
     model.compile(
-        loss=tf.keras.losses.BinaryCrossentropy(),
-        optimizer=tf.keras.optimizers.Adam(learning_rate=learning_rate),
+        loss=tf.keras.losses.BinaryCrossentropy(from_logits=True),
+        optimizer=tf.keras.optimizers.Adam(learning_rate=learning_rate, amsgrad=True),
         metrics=["accuracy"],
     )
 
@@ -112,7 +112,6 @@ if __name__ == "__main__":
         ],
         steps_per_epoch=train_steps,
         validation_steps=validation_steps,
-        # shuffle=True
     )
 
     plot_metrics(model_history=model_history, prefix=NAME, save_path=plots_path)
