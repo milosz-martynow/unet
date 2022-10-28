@@ -1,5 +1,7 @@
 """Run training."""
 
+from pathlib import Path
+
 import tensorflow as tf
 
 from unet.constants import (
@@ -22,7 +24,8 @@ from unet.constants import (
 )
 from unet.dataset import compile_dataset, split_dataset
 from unet.model import build_model
-from unet.plots import plot_metrics, plot_predicted_mask
+from unet.plots import plot_metrics
+from unet.predict import prediction
 from unet.utilities import (
     dataset_paths,
     input_images_and_masks_paths,
@@ -72,13 +75,13 @@ if __name__ == "__main__":
     #  This will prevent umping out from founded loss minimum,
     #  by constant big step at the end of training.
     #
-    #  learning_rate = LEARNING_RATE
+    learning_rate = LEARNING_RATE
     #
-    learning_rate = tf.keras.optimizers.schedules.CosineDecay(
-        initial_learning_rate=LEARNING_RATE,
-        decay_steps=EPOCHS,
-        alpha=LEARNING_RATE * 1e-02,
-    )
+    #  learning_rate = tf.keras.optimizers.schedules.CosineDecay(
+    #      initial_learning_rate=LEARNING_RATE,
+    #      decay_steps=EPOCHS,
+    #      alpha=LEARNING_RATE * 1e-02,
+    #  )
 
     #  Due to that we have only one class paved-area, e.g. streets etc,
     #  We can use BinaryCrossEntropy as a loss function,
@@ -116,10 +119,14 @@ if __name__ == "__main__":
 
     plot_metrics(model_history=model_history, prefix=NAME, save_path=plots_path)
 
-    plot_predicted_mask(
-        dataset=test_dataset,
-        model=model,
-        dataset_number=1,
-        prefix=NAME,
-        save_path=plots_path,
+    dataset_number = 108
+    plot_path = Path(
+        f"{plots_path}",
+        f"{NAME}_image_number_{dataset_number}_predicted_mask.png",
+    )
+    prediction(
+        image_path=originals_paths[dataset_number],
+        mask_path=masks_paths[dataset_number],
+        model_path=model_name,
+        plot=plot_path,
     )

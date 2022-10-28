@@ -28,7 +28,7 @@ def _convolution_block(
         kernel_size=kernel_size,
         padding="same",
         activation="relu",
-        kernel_initializer=tf.keras.initializers.HeNormal,
+        kernel_initializer=tf.keras.initializers.GlorotNormal,
     )(convolution)
 
     #  Batch normalization prevents loss being huge
@@ -97,7 +97,7 @@ def _decoder(
         convolution = tf.keras.layers.Conv2DTranspose(
             filters=filters, kernel_size=kernel_size, strides=pool_size, padding="same"
         )(convolution)
-        convolution = tf.keras.layers.Concatenate(axis=3)([convolution, skip])
+        convolution = tf.keras.layers.Concatenate()([convolution, skip])
         convolution = _convolution_block(
             convolution=convolution, features_in_layer=filters, kernel_size=kernel_size
         )

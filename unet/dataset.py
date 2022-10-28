@@ -25,54 +25,31 @@ def tensorflow_dataset(
     )
 
 
-@tf.function
-def standardize_input_type(
-    original_path: tf.Tensor, mask_path: tf.Tensor
-) -> Tuple[tf.Tensor, tf.Tensor]:
-    """Function that standardize input original and mask image into TensoFlow object.
-    :param original_path: Original image path presented as Tensor object. Coupled with mask_path.
-    :type original_path: tf.Tensor
-    :param mask_path: Mask image path presented as Tensor object. Coupled with original_path.
-    :type mask_path: tf.Tensor
-    :returns: Original and mask tensor objects of standardized form.
-    :rtype: tf.data.Dataset
-    """
-
-    original = tf.io.read_file(original_path)
-    original = tf.image.decode_jpeg(original, channels=1)
-    original = tf.image.convert_image_dtype(original, tf.float32)
-
-    mask = tf.io.read_file(mask_path)
-    mask = tf.image.decode_png(mask, channels=1, dtype=tf.dtypes.uint8)
-    mask = tf.image.convert_image_dtype(mask, tf.float32)
-
-    return original, mask
-
-
-def preprocess(
-    original: tf.Tensor, mask: tf.Tensor, reshape: List[int]
-) -> Tuple[tf.Tensor, tf.Tensor]:
-    """Function that preprocess input images, to create robust images set.
-    :param original: Original image, coupled with mask.
-    :type original: tf.Tensor
-    :param mask: Mask image of coupled original image.
-    :type mask: tf.Tensor
+def image_process(path: tf.Tensor, decode_method: str, reshape: List[int]) -> tf.Tensor:
+    """Read, decode, standardize and reshape given image
+    :param path: Original image path presented as Tensor object. Coupled with mask_path.
+    :type path: tf.Tensor
     :param reshape: Width and height of new image.
     :type reshape: List[int]
-    :returns: Preprocessed original and mask image.
-    :rtype: Tuple[tf.Tensor, tf.Tensor]
+    :param decode_method: type of image to decode: PNG or JPEG
+    :type decode_method: str
+    :returns: Preprocessed image - reading, decoding, standardization, reshape.
+    :rtype: tf.Tensor
     """
+    image = tf.io.read_file(path)
 
-    def _preprocess(input_image: tf.Tensor, reshape: List[int]):
-        """Encapsulated preprocessing function to keep the same procedures for original and mask."""
-        return tf.image.resize(input_image, reshape, method="nearest")
+    if decode_method == "PNG":
+        image = tf.image.decode_jpeg(image, channels=1)
+    elif decode_method == "JPEG":
+        image = tf.image.decode_jpeg(image, channels=1)
 
-    original = _preprocess(original, reshape)
-    mask = _preprocess(mask, reshape)
+    image = tf.image.convert_image_dtype(image, tf.float32)
+    image = tf.image.resize(image, reshape, method="nearest")
 
-    return original, mask
+    return image
 
 
+@tf.function
 def compile_dataset(
     originals_paths: List[str],
     masks_paths: List[str],
@@ -92,14 +69,33 @@ def compile_dataset(
     :rtype: tf.data.Dataset
     """
 
+    def _preprocess_original_and_mask(
+        original: tf.Tensor, mask: tf.Tensor, reshape: List[int]
+    ) -> Tuple[tf.Tensor, tf.Tensor]:
+        """Function that preprocess input images, to create robust images set.
+        :param original: Original image, coupled with mask.
+        :type original: tf.Tensor
+        :param mask: Mask image of coupled original image.
+        :type mask: tf.Tensor
+        :param reshape: Width and height of new image.
+        :type reshape: List[int]
+        :returns: Preprocessed original and mask image.
+        :rtype: Tuple[tf.Tensor, tf.Tensor]
+        """
+
+        original = image_process(path=original, decode_method="JPEG", reshape=reshape)
+        mask = image_process(path=mask, decode_method="PNG", reshape=reshape)
+
+        return original, mask
+
     dataset = tensorflow_dataset(
         originals_paths=originals_paths, masks_paths=masks_paths
     )
 
-    dataset = dataset.map(standardize_input_type)
-
     dataset = dataset.map(
-        lambda original, mask: preprocess(original, mask, reshape=reshape)
+        lambda original, mask: _preprocess_original_and_mask(
+            original, mask, reshape=reshape
+        )
     )
 
     return dataset.batch(batch_size)
