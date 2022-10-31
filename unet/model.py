@@ -28,7 +28,7 @@ def _convolution_block(
         kernel_size=kernel_size,
         padding="same",
         activation="relu",
-        kernel_initializer=tf.keras.initializers.GlorotNormal,
+        kernel_initializer=tf.keras.initializers.LecunNormal,
     )(convolution)
 
     #  Batch normalization prevents loss being huge

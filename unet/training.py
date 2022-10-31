@@ -25,7 +25,7 @@ from unet.constants import (
 from unet.dataset import compile_dataset, split_dataset
 from unet.model import build_model
 from unet.plots import plot_metrics
-from unet.predict import prediction
+from unet.predict import single_prediction
 from unet.utilities import (
     dataset_paths,
     input_images_and_masks_paths,
@@ -124,7 +124,7 @@ if __name__ == "__main__":
         f"{plots_path}",
         f"{NAME}_image_number_{dataset_number}_predicted_mask.png",
     )
-    prediction(
+    single_prediction(
         image_path=originals_paths[dataset_number],
         mask_path=masks_paths[dataset_number],
         model_path=model_name,
