@@ -154,7 +154,11 @@ def build_model(
     #  stuck at some level, due to small non-linearity.
     #  Applying relu, with from_logits=True in loss function might fix that.
     convolution = tf.keras.layers.Conv2D(
-        segmentation_classes, kernel_size=(1, 1), padding="same", activation="relu"
+        segmentation_classes,
+        kernel_size=(1, 1),
+        padding="same",
+        activation=None,
+        kernel_initializer=tf.keras.initializers.LecunNormal,
     )(convolution)
 
     return tf.keras.models.Model(inputs=convolution_base, outputs=convolution)

@@ -1,9 +1,9 @@
 from pathlib import Path
 from typing import List, Optional
 
+import cv2
 import matplotlib.pyplot as plt
 import numpy as np
-import cv2
 import tensorflow as tf
 from constants import RESHAPE
 from dataset import image_process
